@@ -29,11 +29,19 @@ const myList = [
 ];
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      list: myList,
+    };
+  }
+
   render() {
+    const { list } = this.state;
     return (
       <div className="App">
         <header className="App-header" style={style.header}>
-          {myList.map((item) => (
+          {list.map((item) => (
             <div style={style.card} key={item.objectID}>
               <span style={style.cardItem}>
                 <a href={item.url}>{item.title}</a>
