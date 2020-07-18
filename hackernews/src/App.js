@@ -33,14 +33,22 @@ class App extends Component {
     super(props);
     this.state = {
       list: myList,
+      searchTerm: "",
     };
 
     // class method is bound to this
     this.onSearchTermChange = this.onSearchTermChange.bind(this);
   }
 
+  getFilterRules(searchTerm) {
+    return (item) =>
+      item.title.toLowerCase().includes(searchTerm.toLowerCase());
+  }
+
   onSearchTermChange(event) {
-    let updatedList = [];
+    this.setState({ searchTerm: event.target.value });
+
+    /* let updatedList = [];
 
     if (event.target.value !== "") {
       updatedList = myList.filter((item) =>
@@ -50,7 +58,7 @@ class App extends Component {
       updatedList = myList; //resfresh data
     }
 
-    this.setState({ list: updatedList });
+    this.setState({ list: updatedList }); */
   }
 
   onDismiss(id) {
@@ -64,7 +72,7 @@ class App extends Component {
   }
 
   render() {
-    const { list } = this.state;
+    const { list, searchTerm } = this.state;
     return (
       <div className="App">
         <header className="App-header" style={style.header}>
@@ -77,9 +85,13 @@ class App extends Component {
               this.function_name => only executed if event is triggered
               this.function_name() => executed immediately on render
             */}
-            <input type="text" onChange={this.onSearchTermChange} />
+            <input
+              type="text"
+              onChange={this.onSearchTermChange}
+              value={searchTerm}
+            />
           </form>
-          {list.map((item) => (
+          {list.filter(this.getFilterRules(searchTerm)).map((item) => (
             <div style={style.card} key={item.objectID}>
               <span style={style.cardItem}>
                 <a href={item.url}>{item.title}</a>
