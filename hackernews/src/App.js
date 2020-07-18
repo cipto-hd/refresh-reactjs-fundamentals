@@ -34,6 +34,23 @@ class App extends Component {
     this.state = {
       list: myList,
     };
+
+    // class method is bound to this
+    this.onSearchTermChange = this.onSearchTermChange.bind(this);
+  }
+
+  onSearchTermChange(event) {
+    let updatedList = [];
+
+    if (event.target.value !== "") {
+      updatedList = myList.filter((item) =>
+        item.title.toLowerCase().includes(event.target.value.toLowerCase())
+      );
+    } else {
+      updatedList = myList; //resfresh data
+    }
+
+    this.setState({ list: updatedList });
   }
 
   onDismiss(id) {
@@ -42,6 +59,8 @@ class App extends Component {
     this.setState({
       list: updatedList,
     });
+
+    this.onSearchTermChange = this.onSearchTermChange.bind(this);
   }
 
   render() {
@@ -49,6 +68,17 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header" style={style.header}>
+          <form>
+            Search based on the title:
+            {/* event handler function
+              if using arrow function, no need for binding this in the constructor, 
+              otherwise it needs binding
+
+              this.function_name => only executed if event is triggered
+              this.function_name() => executed immediately on render
+            */}
+            <input type="text" onChange={this.onSearchTermChange} />
+          </form>
           {list.map((item) => (
             <div style={style.card} key={item.objectID}>
               <span style={style.cardItem}>
@@ -57,6 +87,8 @@ class App extends Component {
               <span style={style.cardItem}>{item.author}</span>
               <span style={style.cardItem}>{item.num_comments}</span>
               <span style={style.cardItem}>{item.points}</span>
+
+              {/* event handler using arrow function, no need binding this */}
               <button onClick={() => this.onDismiss(item.objectID)}>
                 Remove
               </button>
