@@ -32,15 +32,15 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
+        <header className="App-header" style={style.header}>
           {myList.map((item) => (
-            <div key={item.objectID}>
-              <span>
+            <div style={style.card} key={item.objectID}>
+              <span style={style.cardItem}>
                 <a href={item.url}>{item.title}</a>
               </span>
-              <span>{item.author}</span>
-              <span>{item.num_comments}</span>
-              <span>{item.points}</span>
+              <span style={style.cardItem}>{item.author}</span>
+              <span style={style.cardItem}>{item.num_comments}</span>
+              <span style={style.cardItem}>{item.points}</span>
             </div>
           ))}
         </header>
@@ -48,5 +48,22 @@ class App extends Component {
     );
   }
 }
+
+// style rules
+const style = {
+  header: {
+    paddingTop: 50,
+    paddingLeft: 100,
+    alignItems: "start",
+    justifyContent: "start",
+  },
+  card: {
+    marginTop: 20,
+    textAlign: "left",
+  },
+  cardItem: {
+    display: "block",
+  },
+};
 
 export default App;
