@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import { myList } from "./API/DataSource";
-import { style } from "./Styles/Styles";
+// import { style } from "./Styles/Styles";
 import ListDisplay from "./Components/ListDisplay";
 import SearchBox from "./Components/SearchBox";
 
@@ -52,12 +52,12 @@ class App extends Component {
     const FilteredList = list.filter(this.getFilterRules(searchTerm));
 
     return (
-      <div className="App">
-        <header className="App-header" style={style.header}>
+      <div className="page">
+        <header className="interactions">
           <SearchBox
             searchTerm={searchTerm}
             onSearchTermChange={this.onSearchTermChange}
-          />
+          ><h2>Type to search</h2></SearchBox>
           <ListDisplay
             list={FilteredList}
             onDismissListItem={this.onDismissListItem}
