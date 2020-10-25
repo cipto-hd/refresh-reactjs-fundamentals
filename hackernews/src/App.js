@@ -144,7 +144,7 @@ class App extends Component {
         /* fetch version */
         // this.setSearchTopStories(result);
 
-        this.setState({ isLoading: false });
+        this._isMounted && this.setState({ isLoading: false });
       })
       .catch((error) => {
         this.setState({ error });
@@ -189,8 +189,8 @@ class App extends Component {
 const Search = ({ value, onChange, onSubmit, children }) => {
   const inputEl = useRef();
   useEffect(() => {
-    inputEl.current.focus();
-    console.log(inputEl.current.value);
+    inputEl.current && inputEl.current.focus();
+    // console.log(inputEl.current.value);
   }, []);
   return (
     <form onSubmit={onSubmit}>
