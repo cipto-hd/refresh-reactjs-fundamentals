@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import "./App.css";
 
+/* Constants */
 const DEFAULT_QUERY = "redux";
 const DEFAULT_HPP = "100";
 
@@ -22,8 +23,13 @@ const midColumn = {
 const smallColumn = {
   width: "10%",
 };
+/* End of Constants */
 
+/* Main Component  */
 class App extends Component {
+  _isMounted = false;
+
+  /* Component lifecycle hook function */
   constructor(props) {
     super(props);
 
@@ -42,6 +48,60 @@ class App extends Component {
     this.onDismiss = this.onDismiss.bind(this);
   }
 
+  componentDidMount() {
+    this._isMounted = true;
+    const { searchTerm } = this.state;
+    this.setState({ searchKey: searchTerm });
+    this.fetchSearchTopStories(searchTerm);
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  render() {
+    const { searchTerm, results, searchKey, error } = this.state;
+
+    const page =
+      (results && results[searchKey] && results[searchKey].page) || 0;
+
+    const list =
+      (results && results[searchKey] && results[searchKey].hits) || [];
+
+    return (
+      <div className="page">
+        <div className="interactions">
+          <Search
+            value={searchTerm}
+            onChange={this.onSearchChange}
+            onSubmit={this.onSearchSubmit}
+          >
+            Search!
+          </Search>
+        </div>
+        {error ? (
+          <div className="interactions">
+            <p>Something went wrong.</p>
+          </div>
+        ) : (
+          <>
+            <Table list={list} onDismiss={this.onDismiss} />
+
+            <div className="interactions">
+              <Button
+                onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}
+              >
+                More
+              </Button>
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
+  /* End of Component lifecycle hook function */
+
+  /* Class component custom function */
   needsToSearchTopStories(searchTerm) {
     return !this.state.results[searchTerm];
   }
@@ -55,12 +115,13 @@ class App extends Component {
 
     const updatedHits = [...oldHits, ...hits];
 
-    this.setState({
-      results: {
-        ...results,
-        [searchKey]: { hits: updatedHits, page },
-      },
-    });
+    this._isMounted &&
+      this.setState({
+        results: {
+          ...results,
+          [searchKey]: { hits: updatedHits, page },
+        },
+      });
   }
 
   fetchSearchTopStories(searchTerm, page = 0) {
@@ -82,12 +143,6 @@ class App extends Component {
       .catch((error) => {
         this.setState({ error });
       });
-  }
-
-  componentDidMount() {
-    const { searchTerm } = this.state;
-    this.setState({ searchKey: searchTerm });
-    this.fetchSearchTopStories(searchTerm);
   }
 
   onSearchChange(event) {
@@ -119,49 +174,11 @@ class App extends Component {
       },
     });
   }
-
-  render() {
-    const { searchTerm, results, searchKey, error } = this.state;
-
-    const page =
-      (results && results[searchKey] && results[searchKey].page) || 0;
-
-    const list =
-      (results && results[searchKey] && results[searchKey].hits) || [];
-
-    return (
-      <div className="page">
-        <div className="interactions">
-          <Search
-            value={searchTerm}
-            onChange={this.onSearchChange}
-            onSubmit={this.onSearchSubmit}
-          >
-            Search
-          </Search>
-        </div>
-        {error ? (
-          <div className="interactions">
-            <p>Something went wrong.</p>
-          </div>
-        ) : (
-          <>
-            <Table list={list} onDismiss={this.onDismiss} />
-
-            <div className="interactions">
-              <Button
-                onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}
-              >
-                More
-              </Button>
-            </div>
-          </>
-        )}
-      </div>
-    );
-  }
+  /* End of Class component custom function */
 }
+/* End of Main Component  */
 
+/* Children component */
 const Search = ({ value, onChange, onSubmit, children }) => (
   <form onSubmit={onSubmit}>
     <input type="text" value={value} onChange={onChange} />
@@ -197,5 +214,7 @@ const Button = ({ onClick, className = "", children }) => (
     {children}
   </button>
 );
+/* End of Children component */
 
+export { Search, Table, Button };
 export default App;

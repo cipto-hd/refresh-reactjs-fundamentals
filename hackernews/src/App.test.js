@@ -1,8 +1,83 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+// import { render, screen } from '@testing-library/react';
+import ReactDOM from "react-dom";
+import renderer from "react-test-renderer";
+import Enzyme, { shallow } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+import App, { Search, Table, Button } from "./App";
 
-test('renders learn react link', () => {
+Enzyme.configure({ adapter: new Adapter() });
+
+/* test('renders learn Search button', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const buttonElement = screen.getByText(/Search/i);
+  expect(buttonElement).toBeInTheDocument();
+}); */
+
+/* Snapshot Test with Jest */
+describe("App", () => {
+  it("renders without crashing", () => {
+    const div = document.createElement("div");
+    ReactDOM.render(<App />, div);
+    ReactDOM.unmountComponentAtNode(div);
+  });
+
+  test("has a valid snapshot", () => {
+    const component = renderer.create(<App />);
+    const tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});
+
+describe("Search", () => {
+  it("renders without crashing", () => {
+    const div = document.createElement("div");
+    ReactDOM.render(<Search>Search</Search>, div);
+    ReactDOM.unmountComponentAtNode(div);
+  });
+
+  test("has a valid snapshot", () => {
+    const component = renderer.create(<Search>Search</Search>);
+    const tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});
+
+describe("Button", () => {
+  it("renders without crashing", () => {
+    const div = document.createElement("div");
+    ReactDOM.render(<Button>Give Me More</Button>, div);
+    ReactDOM.unmountComponentAtNode(div);
+  });
+
+  test("has a valid snapshot", () => {
+    const component = renderer.create(<Button>Give Me More</Button>);
+    const tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});
+
+describe("Table", () => {
+  const props = {
+    list: [
+      { title: "1", author: "1", num_comments: 1, points: 2, objectID: "y" },
+      { title: "2", author: "2", num_comments: 1, points: 2, objectID: "z" },
+    ],
+  };
+
+  it("renders without crashing", () => {
+    const div = document.createElement("div");
+    ReactDOM.render(<Table {...props} />, div);
+  });
+
+  test("has a valid snapshot", () => {
+    const component = renderer.create(<Table {...props} />);
+    const tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it("shows two items in list", () => {
+    const element = shallow(<Table {...props} />);
+
+    expect(element.find(".table-row").length).toBe(2);
+  });
 });
