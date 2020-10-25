@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useRef } from "react";
 import axios from "axios";
 import "./App.css";
 import PropTypes from "prop-types";
@@ -181,12 +181,19 @@ class App extends Component {
 
 /* Children component */
 /* Search component */
-const Search = ({ value, onChange, onSubmit, children }) => (
-  <form onSubmit={onSubmit}>
-    <input type="text" value={value} onChange={onChange} />
-    <button type="submit">{children}</button>
-  </form>
-);
+const Search = ({ value, onChange, onSubmit, children }) => {
+  const inputEl = useRef();
+  useEffect(() => {
+    inputEl.current.focus();
+    console.log(inputEl.current.value);
+  }, []);
+  return (
+    <form onSubmit={onSubmit}>
+      <input type="text" value={value} onChange={onChange} ref={inputEl} />
+      <button type="submit">{children}</button>
+    </form>
+  );
+};
 
 /* Table component */
 const Table = ({ list, onDismiss }) => (
