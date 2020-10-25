@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import "./App.css";
+import PropTypes from "prop-types";
 
 /* Constants */
 const DEFAULT_QUERY = "redux";
@@ -179,6 +180,7 @@ class App extends Component {
 /* End of Main Component  */
 
 /* Children component */
+/* Search component */
 const Search = ({ value, onChange, onSubmit, children }) => (
   <form onSubmit={onSubmit}>
     <input type="text" value={value} onChange={onChange} />
@@ -186,6 +188,7 @@ const Search = ({ value, onChange, onSubmit, children }) => (
   </form>
 );
 
+/* Table component */
 const Table = ({ list, onDismiss }) => (
   <div className="table">
     {list.map((item) => (
@@ -209,11 +212,35 @@ const Table = ({ list, onDismiss }) => (
   </div>
 );
 
+Table.propTypes = {
+  list: PropTypes.arrayOf(
+    PropTypes.shape({
+      objectID: PropTypes.string.isRequired,
+      author: PropTypes.string,
+      url: PropTypes.string,
+      num_comments: PropTypes.number,
+      points: PropTypes.number,
+    })
+  ).isRequired,
+  onDismiss: PropTypes.func.isRequired,
+};
+
+/* Button component */
 const Button = ({ onClick, className = "", children }) => (
   <button onClick={onClick} className={className} type="button">
     {children}
   </button>
 );
+
+Button.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  className: PropTypes.string,
+  children: PropTypes.node.isRequired,
+};
+
+Button.defaultProps = {
+  className: "",
+};
 /* End of Children component */
 
 export { Search, Table, Button };

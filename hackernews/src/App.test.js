@@ -45,12 +45,14 @@ describe("Search", () => {
 describe("Button", () => {
   it("renders without crashing", () => {
     const div = document.createElement("div");
-    ReactDOM.render(<Button>Give Me More</Button>, div);
+    ReactDOM.render(<Button onClick={() => {}}>Give Me More</Button>, div);
     ReactDOM.unmountComponentAtNode(div);
   });
 
   test("has a valid snapshot", () => {
-    const component = renderer.create(<Button>Give Me More</Button>);
+    const component = renderer.create(
+      <Button onClick={() => {}}>Give Me More</Button>
+    );
     const tree = component.toJSON();
     expect(tree).toMatchSnapshot();
   });
@@ -66,17 +68,19 @@ describe("Table", () => {
 
   it("renders without crashing", () => {
     const div = document.createElement("div");
-    ReactDOM.render(<Table {...props} />, div);
+    ReactDOM.render(<Table {...props} onDismiss={() => {}} />, div);
   });
 
   test("has a valid snapshot", () => {
-    const component = renderer.create(<Table {...props} />);
+    const component = renderer.create(
+      <Table {...props} onDismiss={() => {}} />
+    );
     const tree = component.toJSON();
     expect(tree).toMatchSnapshot();
   });
 
   it("shows two items in list", () => {
-    const element = shallow(<Table {...props} />);
+    const element = shallow(<Table {...props} onDismiss={() => {}} />);
 
     expect(element.find(".table-row").length).toBe(2);
   });
